@@ -12,6 +12,8 @@ const UsersSchema = new Schema(
     address: { type: String },
     profile_picture: { type: String },
     role: { type: String, enum: ["ADMIN", "HR", "USER"] },
+    created_at: { type: Date, default: Date.now },
+    updated_at: { type: Date, default: Date.now },
   },
   { versionKey: false }
 );
