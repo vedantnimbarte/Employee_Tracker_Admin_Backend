@@ -1,11 +1,23 @@
 import express from "express";
-const app = express();
-const port = 3000;
+import logger from "./common/logger";
+import config from "config";
+import router from "./router";
+import initializeDBConnection from "./common/database";
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
+const app: express.Express = express();
 
-app.listen(port, () => {
-  return console.log(`Express is listening at http://localhost:${port}`);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+const port = config.get("PORT") as number;
+const host = config.get("HOST") as string;
+
+function initializeApi() {
+  router(app);
+  logger.info(`Server listening at http://${host}:${port}`);
+}
+
+app.listen(port, host, () => {
+  initializeDBConnection();
+  initializeApi();
 });
