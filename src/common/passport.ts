@@ -36,7 +36,6 @@ passport.use(
       secretOrKey: "secret",
     },
     function (payload, cb) {
-      logger.info(JSON.stringify(payload));
       UsersModel.findOne({ email: payload.email }, (error, user) => {
         if (error) return cb(error, false);
         if (user) return cb(null, user);

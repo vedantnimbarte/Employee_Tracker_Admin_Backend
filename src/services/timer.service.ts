@@ -14,18 +14,30 @@ class TimeSheetService {
   }
 
   async createTimeSheetEntry(ctx: any) {
-    const { user, activity } = ctx;
-    const user_data = await TimeSheetModel.findOne({ user: user });
-
-    if (!user_data) {
-      const activityContext = { user, activity: [activity] };
-      const result = await TimeSheetModel.create(activityContext);
-      return result;
-    } else {
-      user_data.activity.push(activity);
-      user_data.save();
-      const result = await TimeSheetModel.findById(user_data._id);
-      return result;
+    const { user, status } = ctx;
+    const user_data = await TimeSheetModel.findOne({
+      user: user,
+      status: status,
+    });
+    var result;
+    switch (user_data.status) {
+      case "LOGGED_IN":
+        throw Error("User already logged in");
+      case "BREAK_IN":
+        user_data.status = "BREAK_OUT";
+        result = await user_data.save();
+        return result;
+      case "BREAK_OUT":
+        user_data.status = "BREAK_IN";
+        result = await user_data.save();
+        return result;
+      case "LOGGED_OUT":
+        user_data.status = "BREAK_IN";
+        result = await user_data.save();
+        return result;
+      default:
+        result = await TimeSheetModel.create({ user, status });
+        return result;
     }
   }
 }
