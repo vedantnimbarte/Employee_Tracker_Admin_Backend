@@ -7,11 +7,17 @@ const TimeSheetSchema = new Schema(
 
     status: {
       type: String,
-      enum: ["LOGGED_IN", "BREAK_IN", "BREAK_OUT", "LOGGED_OUT"],
+      enum: ["LOGIN", "BREAK_IN", "BREAK_OUT", "LOGOUT"],
     },
     work_note: { type: String },
-    created_at: { type: Date, default: Date.now },
-    updated_at: { type: Date, default: Date.now },
+    work_hours: { type: Number, default: 0 },
+    break_hours: { type: Number, default: 0 },
+    start_date: { type: Date },
+    end_date: { type: Date },
+    login_time: { type: Date },
+    logout_time: { type: Date },
+    created_at: { type: Date, default: Date },
+    updated_at: { type: Date, default: Date },
   },
   { versionKey: false }
 );
